@@ -1,0 +1,683 @@
+
+
+Started GET "/assets/rails.png" for 127.0.0.1 at 2011-09-29 23:15:38 +0200
+Served asset /rails.png - 200 OK (4ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:15:43 +0200
+  Processing by Admin::DashboardController#index as HTML
+Completed   in 1ms
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-29 23:15:43 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Mysql2::Error: Table 'itm_admin_development.admin_users' doesn't exist: SHOW FIELDS FROM `admin_users`
+Completed 500 Internal Server Error in 2ms
+
+ActiveRecord::StatementInvalid (Mysql2::Error: Table 'itm_admin_development.admin_users' doesn't exist: SHOW FIELDS FROM `admin_users`):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.5ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.1ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (41.7ms)
+  [1m[36m (159.4ms)[0m  [1mCREATE TABLE `schema_migrations` (`version` varchar(255) NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (298.6ms)[0m  CREATE UNIQUE INDEX `unique_schema_migrations` ON `schema_migrations` (`version`)
+  [1m[36m (0.2ms)[0m  [1mSELECT `schema_migrations`.`version` FROM `schema_migrations` [0m
+Migrating to DeviseCreateAdminUsers (20110929205120)
+  [1m[35m (184.9ms)[0m  CREATE TABLE `admin_users` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(128) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `remember_created_at` datetime, `sign_in_count` int(11) DEFAULT 0, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.3ms)[0m  SELECT 1 FROM `admin_users` WHERE `admin_users`.`email` = BINARY 'admin@example.com' LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mSELECT 1 FROM `admin_users` WHERE `admin_users`.`email` = BINARY 'admin@example.com' LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO `admin_users` (`created_at`, `current_sign_in_at`, `current_sign_in_ip`, `email`, `encrypted_password`, `last_sign_in_at`, `last_sign_in_ip`, `remember_created_at`, `reset_password_sent_at`, `reset_password_token`, `sign_in_count`, `updated_at`) VALUES ('2011-09-29 21:16:01', NULL, NULL, 'admin@example.com', '$2a$10$ByHAoKlpHHy0Kx/EeMxcRuh9bIzlNu7rSlWa5yydNIcQMs58ThTmS', NULL, NULL, NULL, NULL, NULL, 0, '2011-09-29 21:16:01')
+  [1m[36m (81.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (386.9ms)[0m  CREATE UNIQUE INDEX `index_admin_users_on_email` ON `admin_users` (`email`)
+  [1m[36m (353.6ms)[0m  [1mCREATE UNIQUE INDEX `index_admin_users_on_reset_password_token` ON `admin_users` (`reset_password_token`)[0m
+  [1m[35m (41.0ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20110929205120')
+Migrating to CreateAdminNotes (20110929225127)
+  [1m[36m (174.0ms)[0m  [1mCREATE TABLE `admin_notes` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `resource_id` int(11) NOT NULL, `resource_type` varchar(255) NOT NULL, `admin_user_id` int(11), `admin_user_type` varchar(255), `body` text, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [1m[35m (342.6ms)[0m  CREATE INDEX `index_admin_notes_on_resource_type_and_resource_id` ON `admin_notes` (`resource_type`, `resource_id`)
+  [1m[36m (321.8ms)[0m  [1mCREATE INDEX `index_admin_notes_on_admin_user_type_and_admin_user_id` ON `admin_notes` (`admin_user_type`, `admin_user_id`)[0m
+  [1m[35m (76.5ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20110929225127')
+Migrating to MoveAdminNotesToComments (20110929225128)
+  [1m[36m (307.5ms)[0m  [1mDROP INDEX `index_admin_notes_on_admin_user_type_and_admin_user_id` ON `admin_notes`[0m
+  [1m[35m (43.6ms)[0m  RENAME TABLE `admin_notes` TO `active_admin_comments`
+  [1m[36m (0.4ms)[0m  [1mSHOW COLUMNS FROM `active_admin_comments` LIKE 'admin_user_type'[0m
+  [1m[35m (705.2ms)[0m  ALTER TABLE `active_admin_comments` CHANGE `admin_user_type` `author_type` varchar(255) DEFAULT NULL
+  [1m[36m (0.4ms)[0m  [1mSHOW COLUMNS FROM `active_admin_comments` LIKE 'admin_user_id'[0m
+  [1m[35m (331.0ms)[0m  ALTER TABLE `active_admin_comments` CHANGE `admin_user_id` `author_id` int(11) DEFAULT NULL
+  [1m[36m (377.1ms)[0m  [1mALTER TABLE `active_admin_comments` ADD `namespace` varchar(255)[0m
+  [1m[35m (276.3ms)[0m  CREATE INDEX `index_active_admin_comments_on_namespace` ON `active_admin_comments` (`namespace`)
+  [1m[36m (342.8ms)[0m  [1mCREATE INDEX `index_active_admin_comments_on_author_type_and_author_id` ON `active_admin_comments` (`author_type`, `author_id`)[0m
+  [1m[35m (0.3ms)[0m  UPDATE active_admin_comments SET namespace='admin'
+  [1m[36m (42.9ms)[0m  [1mINSERT INTO `schema_migrations` (`version`) VALUES ('20110929225128')[0m
+Migrating to AddDeviseToAdminUsers (20110929225129)
+  [1m[35m (0.5ms)[0m  ALTER TABLE `admin_users` ADD `email` varchar(255) DEFAULT '' NOT NULL
+Mysql2::Error: Duplicate column name 'email': ALTER TABLE `admin_users` ADD `email` varchar(255) DEFAULT '' NOT NULL
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-29 23:16:51 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (1.5ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (51.2ms)
+Completed 200 OK in 132ms (Views: 113.4ms | ActiveRecord: 2.5ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:16:51 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:16:52 +0200
+Served asset /active_admin.css - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.css"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-29 23:16:54 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (0.5ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (7.5ms)
+Completed 200 OK in 31ms (Views: 16.8ms | ActiveRecord: 1.4ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:16:54 +0200
+Served asset /active_admin.css - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.css"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:16:54 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-29 23:16:55 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (0.5ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (7.6ms)
+Completed 200 OK in 81ms (Views: 17.4ms | ActiveRecord: 1.7ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:16:55 +0200
+Served asset /active_admin.css - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.css"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:16:55 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-29 23:17:02 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (0.6ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (7.8ms)
+Completed 200 OK in 32ms (Views: 17.4ms | ActiveRecord: 1.5ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:17:02 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:17:02 +0200
+Served asset /active_admin.css - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.css"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:17:06 +0200
+  Processing by Admin::DashboardController#index as HTML
+Completed   in 1ms
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-29 23:17:06 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (0.6ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (9.1ms)
+Completed 200 OK in 35ms (Views: 19.3ms | ActiveRecord: 1.6ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:17:06 +0200
+Served asset /active_admin.css - 404 Not Found (4ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.css"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:17:06 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started POST "/admin/login" for 127.0.0.1 at 2011-09-29 23:17:10 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"1RKNuuKZB7TFb9G4eNAb8Loxof1A+6k+7Qrp+plx2Z8=", "admin_user"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Login"}
+  [1m[36mAdminUser Load (0.4ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`email` = 'admin@example.com' LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.4ms)[0m  [1mUPDATE `admin_users` SET `last_sign_in_at` = '2011-09-29 21:17:10', `current_sign_in_at` = '2011-09-29 21:17:10', `last_sign_in_ip` = '127.0.0.1', `current_sign_in_ip` = '127.0.0.1', `sign_in_count` = 1, `updated_at` = '2011-09-29 21:17:10' WHERE `admin_users`.`id` = 1[0m
+  [1m[35m (87.7ms)[0m  COMMIT
+Redirected to http://localhost:3000/admin
+Completed 302 Found in 353ms
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:17:11 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.3ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (5.9ms)
+Completed 200 OK in 32ms (Views: 15.0ms | ActiveRecord: 2.3ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:17:11 +0200
+Served asset /active_admin.css - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.css"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:17:11 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:17:15 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[35mAdminUser Load (0.2ms)[0m  SELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (4.0ms)
+Completed 200 OK in 25ms (Views: 9.4ms | ActiveRecord: 1.9ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:17:15 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:17:15 +0200
+Served asset /active_admin.css - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.css"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.9ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:19:36 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.2ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (3.6ms)
+Completed 200 OK in 26ms (Views: 8.9ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:19:36 +0200
+Served asset /active_admin.css - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.css"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:19:36 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:21:04 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[35mAdminUser Load (0.2ms)[0m  SELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (4.0ms)
+Completed 200 OK in 70ms (Views: 9.3ms | ActiveRecord: 1.7ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:21:04 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.8ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:21:04 +0200
+Served asset /active_admin.css - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.css"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:22:27 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.2ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (40.0ms)
+Completed 200 OK in 131ms (Views: 98.2ms | ActiveRecord: 2.4ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:22:27 +0200
+Compiled active_admin.css  (0ms)  (pid 13622)
+Served asset /active_admin.css - 200 OK (7ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:22:28 +0200
+Served asset /active_admin.js - 404 Not Found (4ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (2.0ms)
+
+
+Started GET "/admin/logout" for 127.0.0.1 at 2011-09-29 23:22:41 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#destroy as HTML
+  [1m[35mAdminUser Load (0.2ms)[0m  SELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  COMMIT
+Redirected to http://localhost:3000/admin
+Completed 302 Found in 22ms
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:22:41 +0200
+  Processing by Admin::DashboardController#index as HTML
+Completed   in 0ms
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-29 23:22:42 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (1.7ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (18.2ms)
+Completed 200 OK in 47ms (Views: 30.1ms | ActiveRecord: 1.6ms)
+
+
+Started GET "/assets/active_admin.css?body=1" for 127.0.0.1 at 2011-09-29 23:22:42 +0200
+Served asset /active_admin.css - 200 OK (0ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:22:42 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started POST "/admin/login" for 127.0.0.1 at 2011-09-29 23:22:46 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"hVJgplK+zucEkRWI8soTxgI5H7UZjSfK5Oz0AOiEfS4=", "admin_user"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Login"}
+  [1m[36mAdminUser Load (0.4ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`email` = 'admin@example.com' LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mUPDATE `admin_users` SET `current_sign_in_at` = '2011-09-29 21:22:46', `sign_in_count` = 2, `updated_at` = '2011-09-29 21:22:46' WHERE `admin_users`.`id` = 1[0m
+  [1m[35m (82.6ms)[0m  COMMIT
+Redirected to http://localhost:3000/admin
+Completed 302 Found in 304ms
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:22:46 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.3ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (4.0ms)
+Completed 200 OK in 26ms (Views: 9.6ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:22:46 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:22:46 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+
+
+Started GET "/admin/logout" for 127.0.0.1 at 2011-09-29 23:22:49 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#destroy as HTML
+  [1m[35mAdminUser Load (0.2ms)[0m  SELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  COMMIT
+Redirected to http://localhost:3000/admin
+Completed 302 Found in 18ms
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:22:50 +0200
+  Processing by Admin::DashboardController#index as HTML
+Completed   in 1ms
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-29 23:22:50 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (0.6ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (8.6ms)
+Completed 200 OK in 37ms (Views: 16.3ms | ActiveRecord: 3.2ms)
+
+
+Started GET "/assets/active_admin.css?body=1" for 127.0.0.1 at 2011-09-29 23:22:50 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:22:50 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.0ms)
+
+
+Started POST "/admin/login" for 127.0.0.1 at 2011-09-29 23:22:52 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"oSCMR62Gj4KqzjyfX5nuZM9vj+o9/KfymvfVeCdhuNw=", "admin_user"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Login"}
+  [1m[36mAdminUser Load (0.4ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`email` = 'admin@example.com' LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mUPDATE `admin_users` SET `last_sign_in_at` = '2011-09-29 21:22:46', `current_sign_in_at` = '2011-09-29 21:22:52', `sign_in_count` = 3, `updated_at` = '2011-09-29 21:22:52' WHERE `admin_users`.`id` = 1[0m
+  [1m[35m (174.0ms)[0m  COMMIT
+Redirected to http://localhost:3000/admin
+Completed 302 Found in 344ms
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-29 23:22:52 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.3ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (4.2ms)
+Completed 200 OK in 28ms (Views: 11.5ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-29 23:22:52 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-29 23:22:52 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/assets/rails.png" for 127.0.0.1 at 2011-09-30 16:50:01 +0200
+Served asset /rails.png - 304 Not Modified (4ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-30 16:50:03 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.6ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (48.0ms)
+Completed 200 OK in 223ms (Views: 120.9ms | ActiveRecord: 2.8ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-30 16:50:04 +0200
+Served asset /active_admin.css - 304 Not Modified (15ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:50:04 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.1ms)
+
+
+Started GET "/admin/logout" for 127.0.0.1 at 2011-09-30 16:50:08 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#destroy as HTML
+  [1m[35mAdminUser Load (0.2ms)[0m  SELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  COMMIT
+Redirected to http://localhost:3000/admin
+Completed 302 Found in 21ms
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-30 16:50:08 +0200
+  Processing by Admin::DashboardController#index as HTML
+Completed   in 0ms
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-30 16:50:08 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (2.3ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (82.2ms)
+Completed 200 OK in 110ms (Views: 93.4ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/assets/active_admin.css?body=1" for 127.0.0.1 at 2011-09-30 16:50:08 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:50:08 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+
+
+Started GET "/admin/" for 127.0.0.1 at 2011-09-30 16:50:12 +0200
+  Processing by Admin::DashboardController#index as HTML
+Completed   in 0ms
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-30 16:50:12 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (0.6ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (8.1ms)
+Completed 200 OK in 31ms (Views: 14.7ms | ActiveRecord: 1.6ms)
+
+
+Started GET "/assets/active_admin.css?body=1" for 127.0.0.1 at 2011-09-30 16:50:12 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:50:12 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/admin/login" for 127.0.0.1 at 2011-09-30 16:52:46 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#new as HTML
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/devise-1.4.7/app/views/devise/shared/_links.erb (1.5ms)
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/devise/sessions/new.html.erb within layouts/active_admin_logged_out (55.0ms)
+Completed 200 OK in 149ms (Views: 130.3ms | ActiveRecord: 2.3ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:52:47 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+
+
+Started GET "/assets/active_admin.css?body=1" for 127.0.0.1 at 2011-09-30 16:52:47 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started POST "/admin/login" for 127.0.0.1 at 2011-09-30 16:52:48 +0200
+  Processing by ActiveAdmin::Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"0iehRGM6TFogmXYVAf3/TjlOq+GMetZoCWlxqNIOx9k=", "admin_user"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Login"}
+  [1m[36mAdminUser Load (0.4ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`email` = 'admin@example.com' LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.4ms)[0m  [1mUPDATE `admin_users` SET `last_sign_in_at` = '2011-09-29 21:22:52', `current_sign_in_at` = '2011-09-30 14:52:48', `sign_in_count` = 4, `updated_at` = '2011-09-30 14:52:48' WHERE `admin_users`.`id` = 1[0m
+  [1m[35m (102.1ms)[0m  COMMIT
+Redirected to http://localhost:3000/admin
+Completed 302 Found in 447ms
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-30 16:52:49 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.3ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (6.3ms)
+Completed 200 OK in 33ms (Views: 15.2ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-30 16:52:49 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:52:49 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-30 16:57:24 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[35mAdminUser Load (0.2ms)[0m  SELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (3.9ms)
+Completed 200 OK in 25ms (Views: 9.3ms | ActiveRecord: 1.9ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:57:24 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-30 16:57:24 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-30 16:58:34 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.2ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (3.7ms)
+Completed 200 OK in 25ms (Views: 9.4ms | ActiveRecord: 1.8ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:58:34 +0200
+Compiled active_admin.js  (1ms)  (pid 24274)
+Served asset /active_admin.js - 200 OK (7ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-30 16:58:34 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-30 16:58:42 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[35mAdminUser Load (0.2ms)[0m  SELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (63.3ms)
+Completed 200 OK in 86ms (Views: 70.6ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-30 16:58:43 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-30 16:59:11 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.2ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (4.0ms)
+Completed 200 OK in 26ms (Views: 9.4ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-30 16:59:11 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:59:11 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-30 16:59:13 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[35mAdminUser Load (0.2ms)[0m  SELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (4.0ms)
+Completed 200 OK in 88ms (Views: 9.9ms | ActiveRecord: 1.7ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:59:13 +0200
+Served asset /active_admin.js - 404 Not Found (3ms)
+
+ActionController::RoutingError (No route matches [GET] "/assets/active_admin.js"):
+  
+
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/actionpack-3.1.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.9ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-30 16:59:13 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/admin" for 127.0.0.1 at 2011-09-30 16:59:26 +0200
+  Processing by Admin::DashboardController#index as HTML
+  [1m[36mAdminUser Load (0.2ms)[0m  [1mSELECT `admin_users`.* FROM `admin_users` WHERE `admin_users`.`id` = 1 LIMIT 1[0m
+Rendered /home/chrisf/.rvm/gems/ruby-1.9.2-head@itm_admin2/gems/activeadmin-0.3.2/app/views/active_admin/dashboard/index.html.arb (4.2ms)
+Completed 200 OK in 26ms (Views: 9.7ms | ActiveRecord: 1.8ms)
+
+
+Started GET "/assets/active_admin.js" for 127.0.0.1 at 2011-09-30 16:59:26 +0200
+Served asset /active_admin.js - 200 OK (0ms)
+
+
+Started GET "/assets/active_admin.css" for 127.0.0.1 at 2011-09-30 16:59:26 +0200
+Served asset /active_admin.css - 304 Not Modified (0ms)
